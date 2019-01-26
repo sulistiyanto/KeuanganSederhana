@@ -1,8 +1,11 @@
 package sulistiyanto.com.keuangansederhana.ui.main
 
 import android.content.Intent
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +18,7 @@ import sulistiyanto.com.keuangansederhana.di.subcomponent.ActivityComponent
 import sulistiyanto.com.keuangansederhana.model.FinancialModel
 import sulistiyanto.com.keuangansederhana.ui.addEdit.AddEditActivity
 import sulistiyanto.com.keuangansederhana.ui.base.BaseActivity
+import sulistiyanto.com.keuangansederhana.ui.billNumber.BillNumberActivity
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainView {
@@ -42,6 +46,23 @@ class MainActivity : BaseActivity(), MainView {
             val intent = Intent(this, AddEditActivity::class.java)
             intent.putExtra("key", "add")
             startActivity(intent)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_settings -> {
+                val intent = Intent(this, BillNumberActivity::class.java)
+                intent.putExtra("key", "")
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -74,6 +95,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun displayError(message: String) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show()
     }
 
 }

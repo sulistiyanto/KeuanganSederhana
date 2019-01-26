@@ -10,11 +10,16 @@ import sulistiyanto.com.keuangansederhana.di.subcomponent.ActivityComponent
 import sulistiyanto.com.keuangansederhana.model.FinancialModel
 import sulistiyanto.com.keuangansederhana.ui.base.BaseActivity
 import javax.inject.Inject
+import android.content.Intent
+import sulistiyanto.com.keuangansederhana.ui.billNumber.BillNumberActivity
+import android.app.Activity
 
+
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class AddEditActivity : BaseActivity(), AddEditView {
 
     private var id: Int = 0
-    private var serialNumber = ""
+    private var serialNumber: String? = ""
 
     @Inject
     lateinit var presenter: AddEditPresenter
@@ -40,11 +45,17 @@ class AddEditActivity : BaseActivity(), AddEditView {
             val name = etFromName.text.toString()
             val count = etCount.text.toString()
             val desc = etDescription.text.toString()
-            presenter.save(dbHandler, name, count, desc, key, id, serialNumber)
+            val bill = etBillNumber.text.toString()
+            serialNumber?.let { it1 -> presenter.save(dbHandler, name, count, desc, key, id, it1, bill) }
         }
 
         btnDelete.setOnClickListener {
             presenter.deleteData(dbHandler, id)
+        }
+
+        imageAdd.setOnClickListener {
+            val i = Intent(this, BillNumberActivity::class.java)
+            startActivityForResult(i, 1)
         }
     }
 
@@ -58,10 +69,21 @@ class AddEditActivity : BaseActivity(), AddEditView {
 
     override fun displayDataEdit(model: FinancialModel) {
         id = model.id!!
-        serialNumber = model.serialNumber!!
+        serialNumber = model.serialNumber
         etFromName.setText(model.name)
         etCount.setText(model.count)
         etDescription.setText(model.description)
+        etBillNumber.setText(model.billNumber)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === 1) {
+            if (resultCode === Activity.RESULT_OK) {
+                val bill = data?.getStringExtra("bill")
+                etBillNumber.setText(bill)
+            }
+        }
     }
 
     override fun successSave() {

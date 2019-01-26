@@ -2,6 +2,7 @@ package sulistiyanto.com.keuangansederhana.ui.addEdit
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import sulistiyanto.com.keuangansederhana.database.DatabaseHandler
 import sulistiyanto.com.keuangansederhana.model.FinancialModel
 import sulistiyanto.com.keuangansederhana.ui.base.BasePresenter
@@ -33,7 +34,8 @@ class AddEditPresenter @Inject constructor(): BasePresenter<AddEditView>() {
         desc: String,
         key: String,
         id: Int,
-        serialNumber: String
+        serialNumber: String,
+        bill: String
     ) {
         when {
             name == "" -> view?.displayError("Nama dari hari diisi")
@@ -44,11 +46,11 @@ class AddEditPresenter @Inject constructor(): BasePresenter<AddEditView>() {
                 val formattedDate = df.format(date)
                 val serial = generateSerialNumber(dbHandler, formattedDate)
                 if (key == "add") {
-                    val model = FinancialModel(id, name, count, desc, formattedDate, serial)
+                    val model = FinancialModel(id, name, count, desc, formattedDate, serial, bill)
                     val result = dbHandler.addData(model)
                     resultDisplay(result)
                 } else {
-                    val model = FinancialModel(id, name, count, desc, formattedDate, serialNumber)
+                    val model = FinancialModel(id, name, count, desc, formattedDate, serialNumber, bill)
                     val result = dbHandler.updateData(model)
                     resultDisplay(result)
                 }

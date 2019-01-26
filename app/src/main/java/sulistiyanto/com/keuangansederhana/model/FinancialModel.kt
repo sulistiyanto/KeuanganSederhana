@@ -9,4 +9,5 @@ import kotlinx.android.parcel.Parcelize
     val count: String?,
     val description: String?,
     val date: String?,
-    val serialNumber: String?) : Parcelable
+    val serialNumber: String?,
+    val billNumber: String?) : Parcelable
